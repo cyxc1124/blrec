@@ -77,6 +77,10 @@
 
 ## Docker
 
+镜像发布到 GHCR：`ghcr.io/cyxc1124/blrec`，支持 `linux/amd64` 和 `linux/arm64`。
+
+`master` 分支更新 `latest`，版本标签（如 `v2.0.0-beta.5`）发布同名镜像标签；PR 仅验证构建。
+
 ### 环境变量
 
 - 默认设置文件位置: `ENV BLREC_DEFAULT_SETTINGS_FILE=/cfg/settings.toml`
@@ -86,14 +90,14 @@
 
 ### 默认参数运行
 
-`sudo docker run -v /etc/blrec:/cfg -v /var/log/blrec:/log -v ~/blrec:/rec -dp 2233:2233 acgnhiki/blrec`
+`sudo docker run -v /etc/blrec:/cfg -v /var/log/blrec:/log -v ~/blrec:/rec -dp 2233:2233 ghcr.io/cyxc1124/blrec:latest`
 
 ### 命令行参数用法
 
 ```bash
 sudo docker run \
     -v /etc/blrec:/cfg -v /var/log/blrec:/log -v ~/blrec:/rec \
-    -dp 2233:2233 acgnhiki/blrec \
+    -dp 2233:2233 ghcr.io/cyxc1124/blrec:latest \
     -c /cfg/another_settings.toml \
     --key-file path/to/key-file \
     --cert-file path/to/cert-file \

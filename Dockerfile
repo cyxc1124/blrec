@@ -1,17 +1,17 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.11-slim-buster
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 VOLUME ["/cfg", "/log", "/rec"]
 
 COPY src src/
-COPY setup.py setup.cfg ./
+COPY setup.py setup.cfg pyproject.toml MANIFEST.in README.md LICENSE ./
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg build-essential python3-dev && \
     rm -rf /var/lib/apt/lists/* && \
-    pip3 install --no-cache-dir -e . && \
+    pip3 install --no-cache-dir . && \
     apt-get purge -y --auto-remove build-essential python3-dev
 # ref: https://github.com/docker-library/python/issues/60#issuecomment-134322383
 
