@@ -1,5 +1,11 @@
 # 更新日志
 
+## 2.0.0-beta.6
+
+- 修复弹幕登录身份和 buvid 认证
+- 修复 Docker 构建，统一通过 GHCR 发布 AMD64/ARM64 镜像
+- 移除 PyPI 发布流程
+
 ## 2.0.0-beta.5
 
 - 兼容长 room id
