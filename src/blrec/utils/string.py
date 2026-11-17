@@ -14,7 +14,7 @@ def camel_case(string: str) -> str:
 
 
 def extract_uid_from_cookie(cookie: str) -> Optional[int]:
-    match = re.search(r'DedeUserID=(\d+);', cookie)
+    match = re.search(r'(?:^|;)\s*DedeUserID=(\d+)\s*(?:;|$)', cookie)
     if match:
         return int(match.group(1))
     else:
@@ -22,7 +22,7 @@ def extract_uid_from_cookie(cookie: str) -> Optional[int]:
 
 
 def extract_buvid_from_cookie(cookie: str) -> Optional[str]:
-    match = re.search(r'buvid3=([\w-]+);', cookie)
+    match = re.search(r'(?:^|;)\s*buvid3=([\w-]+)\s*(?:;|$)', cookie)
     if match:
         return match.group(1)
     else:

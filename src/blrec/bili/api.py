@@ -1,5 +1,6 @@
 import asyncio
 import hashlib
+import re
 import time
 from abc import ABC
 from datetime import datetime
@@ -323,10 +324,24 @@ class WebApi(BaseApi):
     async def get_danmu_info(self, room_id: int) -> ResponseData:
         path = '/xlive/web-room/v1/index/getDanmuInfo'
         params = {'id': room_id}
+        headers = self.headers.copy()
+        # Keep SESSDATA; this endpoint can reject DedeUserID with -352.
+        headers['Cookie'] = '; '.join(
+            part.strip()
+            for part in headers.get('Cookie', '').split(';')
+            if part.strip() and not part.strip().startswith('DedeUserID=')
+        )
         json_res = await self._get_json(
-            self.base_live_api_urls, path, with_wbi=True, params=params
+            self.base_live_api_urls, path, with_wbi=True, params=params, headers=headers
         )
         return json_res['data']
+
+    async def get_buvid(self) -> str:
+        json_res = await self._get_json(self.base_api_urls, '/x/frontend/finger/spi')
+        buvid = (json_res.get('data') or {}).get('b_3')
+        if not isinstance(buvid, str) or not re.fullmatch(r'[\w-]+', buvid):
+            raise ValueError('Invalid buvid response')
+        return buvid
 
     async def get_nav(self) -> ResponseData:
         path = '/x/web-interface/nav'
