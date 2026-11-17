@@ -223,7 +223,22 @@ class DanmakuClient(EventEmitter[DanmakuListener], AsyncStoppableMixin):
         else:
             self._api_platform = 'android'
 
+    async def _ensure_buvid(self) -> None:
+        if self._buvid or not self.headers.get('Cookie'):
+            return
+
+        buvid = await self.webapi.get_buvid()
+        parts = [
+            part.strip()
+            for part in self.headers['Cookie'].split(';')
+            if part.strip() and not part.strip().startswith('buvid3=')
+        ]
+        cookie = '; '.join([*parts, f'buvid3={buvid}'])
+        self.headers = {**self.headers, 'Cookie': cookie}
+        self.webapi.headers = {**self.webapi.headers, 'Cookie': cookie}
+
     async def _update_danmu_info(self) -> None:
+        await self._ensure_buvid()
         self._logger.debug(f'Updating danmu info via {self._api_platform} api...')
         api: Union[WebApi, AppApi]
         if self._api_platform == 'web':
